@@ -543,25 +543,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6a96a5fe8f24d84d9200be552082f87, type: 3}
---- !u!1 &359658018 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4817663940326122829, guid: dedf6dc96747f4d459abc4b3f61e659e,
-    type: 3}
-  m_PrefabInstance: {fileID: 2034932132}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &359658023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359658018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 036af208f8b6cee4f94bb5802a7639a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _key: 308
 --- !u!1 &365178206
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,16 +1166,6 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1332018121}
-    - target: {fileID: 4817663940326122833, guid: dedf6dc96747f4d459abc4b3f61e659e,
-        type: 3}
-      propertyPath: blockers.m_Bits
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4817663940326122833, guid: dedf6dc96747f4d459abc4b3f61e659e,
-        type: 3}
-      propertyPath: debug
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dedf6dc96747f4d459abc4b3f61e659e, type: 3}
 --- !u!1 &2052574428

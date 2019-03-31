@@ -30,10 +30,16 @@ namespace MazeGen
             try
             {
                 Transform maze = GameObject.Find("Maze").transform;
-                GameObject part = (GameObject)Instantiate(Resources.Load($"MazeParts/{def.prefabName}"));
+                GameObject prefab = (GameObject)Resources.Load($"MazeParts/{def.prefabName}");
+                if (prefab == null)
+                {
+                    prefab = (GameObject)Resources.Load($"MazeParts/Specials/{def.prefabName}");
+                }
+                GameObject part = (GameObject)Instantiate(prefab);
+                part.GetComponent<DebugPattern>().partDef = def;
                 part.transform.SetParent(maze);
-                part.transform.rotation = Quaternion.Euler(0.0f, -90.0f * def.rotation, 0.0f);
-                part.name = $"{def.prefabName.Replace("pf", "")} ROW:{def.row} COLUMN:{def.column} Rot:{def.rotation} N:{def.north} E:{def.east} S:{def.south} W:{def.west}";
+                part.transform.rotation = Quaternion.Euler(0.0f, 90.0f * def.rotation, 0.0f);
+                part.name = $"{def.prefabName.Replace("pf", "")} ROW:{def.row} COLUMN:{def.column}";
                 part.transform.position = new Vector3(column * 7, 0, row * -7);
             }
             catch (System.Exception)

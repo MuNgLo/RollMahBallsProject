@@ -374,7 +374,7 @@ MonoBehaviour:
   mData:
     width: 8
     height: 8
-    seed: 3333
+    seed: 342342
 --- !u!114 &985255232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,58 +389,458 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parts:
   - prefabName: pfFloor
+    willGenerate: 1
+    validNorth:
+      none: 1
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validEast:
+      none: 1
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 1
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 1
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
     north: 1
     east: 1
     south: 1
     west: 1
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
     rotation: 0
     row: -1
     column: -1
   - prefabName: pfStraight
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 1
+      wallfloor: 1
+      corridor: 1
+      any: 0
+    validEast:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 0
+      floor: 1
+      wallfloor: 1
+      corridor: 1
+      any: 0
+    validWest:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
     north: 3
     east: 0
     south: 3
     west: 0
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
     rotation: 0
     row: -1
     column: -1
   - prefabName: pfTCross
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
+    validEast:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
+    validSouth:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
     north: 3
     east: 3
     south: 0
     west: 3
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
     rotation: 0
     row: -1
     column: -1
   - prefabName: pfTurn
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
+    validEast:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
     north: 3
     east: 0
     south: 0
     west: 3
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
     rotation: 0
     row: -1
     column: -1
   - prefabName: pfWallCorner
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 1
+      wallfloor: 1
+      corridor: 1
+      any: 0
+    validEast:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 0
+      floor: 1
+      wallfloor: 1
+      corridor: 1
+      any: 0
     north: 2
     east: 0
     south: 0
     west: 2
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
     rotation: 0
     row: -1
     column: -1
   - prefabName: pfWallOpening
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 0
+      wallfloor: 0
+      corridor: 1
+      any: 0
+    validEast:
+      none: 0
+      floor: 0
+      wallfloor: 1
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 0
+      floor: 0
+      wallfloor: 1
+      corridor: 0
+      any: 0
     north: 3
     east: 2
     south: 1
     west: 2
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
     rotation: 0
     row: -1
     column: -1
   - prefabName: pfXCross
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
+    validEast:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
+    validSouth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
+    validWest:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
     north: 3
     east: 3
     south: 3
     west: 3
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
+    rotation: 0
+    row: -1
+    column: -1
+  - prefabName: pfDeadEnd
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 1
+      any: 0
+    validEast:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    north: 3
+    east: 0
+    south: 0
+    west: 0
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
+    rotation: 0
+    row: -1
+    column: -1
+  - prefabName: pfWall
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 0
+      wallfloor: 1
+      corridor: 1
+      any: 0
+    validEast:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 0
+      floor: 0
+      wallfloor: 1
+      corridor: 1
+      any: 0
+    validWest:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    north: 2
+    east: 0
+    south: 2
+    west: 1
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
+    rotation: 0
+    row: -1
+    column: -1
+  - prefabName: pfWallOuterCorner
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 0
+      wallfloor: 1
+      corridor: 0
+      any: 0
+    validEast:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 0
+      floor: 0
+      wallfloor: 1
+      corridor: 0
+      any: 0
+    north: 2
+    east: 1
+    south: 1
+    west: 2
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
+    rotation: 0
+    row: -1
+    column: -1
+  - prefabName: pfSpawnPlate
+    willGenerate: 0
+    validNorth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validEast:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 0
+      floor: 1
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    north: 1
+    east: 1
+    south: 1
+    west: 1
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
+    rotation: 0
+    row: -1
+    column: -1
+  - prefabName: pfError
+    willGenerate: 0
+    validNorth:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validEast:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 1
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    north: 0
+    east: 0
+    south: 0
+    west: 0
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
     rotation: 0
     row: -1
     column: -1

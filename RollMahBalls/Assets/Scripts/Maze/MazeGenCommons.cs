@@ -12,10 +12,21 @@ namespace MazeGen
     {
         [UnityEngine.SerializeField]
         public string prefabName = "unset";
+        [UnityEngine.SerializeField]
+        public bool willGenerate = true;
+        [UnityEngine.SerializeField]
+        public Matchable validNorth;
+        [UnityEngine.SerializeField]
+        public Matchable validEast;
+        [UnityEngine.SerializeField]
+        public Matchable validSouth;
+        [UnityEngine.SerializeField]
+        public Matchable validWest;
         public CONNTYPE north = CONNTYPE.NONE;
         public CONNTYPE east = CONNTYPE.NONE;
         public CONNTYPE south = CONNTYPE.NONE;
         public CONNTYPE west = CONNTYPE.NONE;
+        public MazePartPattern pattern;
         public int rotation = 0;
         public int row = -1;
         public int column = -1;
@@ -24,14 +35,34 @@ namespace MazeGen
         public MazePartDefinition(MazePartDefinition data, int r, int c)
         {
             prefabName = data.prefabName;
+            willGenerate = data.willGenerate;
+            validNorth = data.validNorth;
+            validEast = data.validEast;
+            validSouth = data.validSouth;
+            validWest = data.validWest;
             north = data.north;
             east = data.east;
             south = data.south;
             west = data.west;
+            pattern = data.pattern;
             rotation = data.rotation;
             row = r;
             column = c;
         }
+    }
+    [System.Serializable]
+    public class Matchable
+    {
+        [UnityEngine.SerializeField]
+        public bool none = false;
+        [UnityEngine.SerializeField]
+        public bool floor = false;
+        [UnityEngine.SerializeField]
+        public bool wallfloor = false;
+        [UnityEngine.SerializeField]
+        public bool corridor = false;
+        [UnityEngine.SerializeField]
+        public bool any = false;
     }
     [System.Serializable]
     public class MazePartPattern
@@ -54,10 +85,10 @@ namespace MazeGen
             switch (data.rotation)
             {
                 case 1:
-                    map[row][column].north = data.east;
-                    map[row][column].east = data.south;
-                    map[row][column].south = data.west;
-                    map[row][column].west = data.north;
+                    map[row][column].north = data.west;
+                    map[row][column].east = data.north;
+                    map[row][column].south = data.east;
+                    map[row][column].west = data.south;
                     break;
                 case 2:
                     map[row][column].north = data.south;
@@ -66,10 +97,10 @@ namespace MazeGen
                     map[row][column].west = data.east;
                     break;
                 case 3:
-                    map[row][column].north = data.west;
-                    map[row][column].east = data.north;
-                    map[row][column].south = data.east;
-                    map[row][column].west = data.south;
+                    map[row][column].north = data.east;
+                    map[row][column].east = data.south;
+                    map[row][column].south = data.west;
+                    map[row][column].west = data.north;
                     break;
             }
         }
@@ -105,7 +136,7 @@ namespace MazeGen
         }
         private CONNTYPE SouthConnMatch(int row, int column)
         {
-            if (row == height-1)
+            if (row == height)
             {
                 return CONNTYPE.NONE;
             }
@@ -134,7 +165,7 @@ namespace MazeGen
         }
         private CONNTYPE EastConnMatch(int row, int column)
         {
-            if (row == width-1)
+            if (column == width)
             {
                 return CONNTYPE.NONE;
             }
@@ -155,8 +186,12 @@ namespace MazeGen
 
         public void ClearMap()
         {
+            // check min size
+            if(height < 5) { height = 5; }
+            if(width < 5) { width = 5; }
+
             map = new Dictionary<int, Dictionary<int, MazePartDefinition>>();
-            for (int row = 0; row < height; row++)
+            for (int row = 0; row <= height; row++)
             {
                 map[row] = new Dictionary<int, MazePartDefinition>();
                 /*for (int column = 0; column < width; column++)

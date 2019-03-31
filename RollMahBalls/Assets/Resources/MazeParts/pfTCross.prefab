@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3022498665003956602}
+  - component: {fileID: 6479141569257082444}
   m_Layer: 0
   m_Name: pfTCross
   m_TagString: Untagged
@@ -31,6 +32,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6479141569257082444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8244642600234735922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79d6ae9c12300584fb33c598707eb5e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partDef:
+    prefabName: unset
+    willGenerate: 1
+    validNorth:
+      none: 0
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    north: 0
+    east: 0
+    south: 0
+    west: 0
+    pattern:
+      north: 4
+      east: 4
+      south: 4
+      west: 4
+    rotation: 0
+    row: -1
+    column: -1
 --- !u!1001 &8841557327537094414
 PrefabInstance:
   m_ObjectHideFlags: 0

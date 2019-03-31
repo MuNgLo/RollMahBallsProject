@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4817663940326122831}
   - component: {fileID: 4817663940326122830}
   - component: {fileID: 4817663940326122833}
+  - component: {fileID: 359658023}
   m_Layer: 0
   m_Name: pfPlayerCamera
   m_TagString: MainCamera
@@ -95,5 +96,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01f2b22294a92754084ef7271b0747f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockers:
+    serializedVersion: 2
+    m_Bits: 1
   target: {fileID: 0}
-  offset: 1.5
+  tw: {fileID: 0}
+  vOffset: 1.5
+  vFocus: 2.5
+  mouseCam: 1
+  debug: 0
+--- !u!114 &359658023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4817663940326122829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 036af208f8b6cee4f94bb5802a7639a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _key: 308
