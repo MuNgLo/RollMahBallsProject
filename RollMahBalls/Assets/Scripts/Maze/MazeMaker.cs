@@ -9,9 +9,13 @@ namespace MazeGen
         public bool debug = true;
         public MazeData mData;
 
-
         private System.Random rng;
         private MazeParts parts;
+        [SerializeField]
+        private List<MazePartDefinition> pieces = new List<MazePartDefinition>();
+        [SerializeField]
+        private List<MazePartDefinition> specials = new List<MazePartDefinition>();
+
         // Start is called before the first frame update
         void Start()
         {
@@ -33,7 +37,12 @@ namespace MazeGen
             }
             mData.ClearMap();
             rng = new System.Random(mData.seed);
-            GenerateSpawns(1);
+            pieces = new List<MazePartDefinition>();
+            specials = new List<MazePartDefinition>();
+            pieces.AddRange(parts.parts);
+            specials.AddRange(pieces.FindAll(p => p.willGenerate == false));
+            pieces.RemoveAll(p => p.willGenerate == false);
+            //GenerateSpawns(1);
             for (int i = 0; i <= mData.height; i++)
             {
                 GenerateRow(i, mData.width);
@@ -48,12 +57,7 @@ namespace MazeGen
         {
             int r = rng.Next(mData.height - 2);
             int c = rng.Next(mData.width - 2);
-            MazePartDefinition piece = new MazePartDefinition();
-            piece.prefabName = "pfSpawnPlate";
-            piece.north = CONNTYPE.FLOOR;
-            piece.east = CONNTYPE.FLOOR;
-            piece.south = CONNTYPE.FLOOR;
-            piece.west = CONNTYPE.FLOOR;
+            MazePartDefinition piece = specials.Find(p => p.prefabName == "pfSpawnPlate");
             piece.row = r + 1;
             piece.column = c + 1;
             mData.InsertMapData(piece.row, piece.column, piece);
@@ -63,34 +67,63 @@ namespace MazeGen
         {
             for (int column = 0; column <= width; column++)
             {
-               
+
                 //while (mData.Map[row][column].prefabName == "unset")
 
-                List<MazePartDefinition> pieces = new List<MazePartDefinition>();
-                List<MazePartDefinition> specials = new List<MazePartDefinition>();
+                pieces = new List<MazePartDefinition>();
+                specials = new List<MazePartDefinition>();
                 pieces.AddRange(parts.parts);
                 specials.AddRange(pieces.FindAll(p => p.willGenerate == false));
                 pieces.RemoveAll(p => p.willGenerate == false);
 
-                while (!mData.Map[row].ContainsKey(column))
+                // Construct the weighted table
+                PiecesTable table = new PiecesTable();
+                foreach(MazePartDefinition part in pieces)
+                {
+                    table.AddItem(part);
+                }
+
+                bool picked = false;
+                while (!picked)
                     {
-                    
-                    int index = rng.Next(pieces.Count);
-                    MazePartDefinition piece = new MazePartDefinition(pieces[index], row, column);
-                    pieces.RemoveAt(index);
+
+                    if (mData.Map[row].ContainsKey(column))
+                    {
+                        // Already have a piece there
+                        break;
+                    }
+
+                    // Get the pattern we need to match against
                     MazePartPattern pattern = mData.GetPattern(row, column);
-                    piece.pattern = pattern;
-                    for (int rot = 0; rot < 4; rot++)
+
+                    // Pick the piece
+                    //int index = rng.Next(pieces.Count);
+                    //MazePartDefinition piece = new MazePartDefinition(pieces[index], row, column);
+                    MazePartDefinition piece = table.GetRandomPiece();
+                    if (piece != null)
                     {
-                        piece.rotation = rot;
-                        if (MatchPart(row, column, piece, pattern))
+                        table.RemoveEntry(piece);
+                        pieces.RemoveAll(p => p.prefabName == piece.prefabName);
+                        piece.pattern = pattern;
+
+
+                        // Match against all for rotations
+                        for (int rot = 0; rot < 4; rot++)
                         {
-                            mData.InsertMapData(row, column, piece);
-                            //Debug.Log($"Matched piece {piece.prefabName} on rotation R:{piece.rotation}.");
-                            rot = 100;
+                            piece.rotation = rot;
+                            if (MatchPart(row, column, piece, pattern))
+                            {
+                                mData.InsertMapData(row, column, piece);
+                                if ((row == 0 && column == 0) || piece.prefabName == "unset")
+                                {
+                                    Debug.Log($"Matched first piece {piece.prefabName} on rotation R:{piece.rotation}.");
+                                }
+                                picked = true;
+                                break;
+                            }
                         }
                     }
-                    if(pieces.Count <= 0)
+                    if(pieces.Count <= 0 && !picked)
                     {
                         piece.prefabName = "unset";
                         piece = specials.Find(p => p.prefabName == "pfError");
@@ -117,40 +150,48 @@ namespace MazeGen
             switch (part.rotation)
             {
                 case 0:
-                    //if (part.north != pattern.north && pattern.north != CONNTYPE.ANY) return false;
                     if (!CheckMatchable(part.validNorth, pattern.north)) return false;
-
-                    //if (part.east != pattern.east && pattern.east != CONNTYPE.ANY) return false;
                     if (!CheckMatchable(part.validEast, pattern.east)) return false;
-
-
-                    //if (part.south != pattern.south && pattern.south != CONNTYPE.ANY) return false;
                     if (!CheckMatchable(part.validSouth, pattern.south)) return false;
-
-                    //if (part.west != pattern.west && pattern.west != CONNTYPE.ANY) return false;
                     if (!CheckMatchable(part.validWest, pattern.west)) return false;
-
                     return true;
                 case 1:
-                    if (part.west != pattern.north && pattern.north != CONNTYPE.ANY) return false;
+                    //if (part.west != pattern.north && pattern.north != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validWest, pattern.north)) return false;
+
                     //if (part.north != pattern.east && pattern.east != CONNTYPE.ANY) return false;
                     if (!CheckMatchable(part.validNorth, pattern.east)) return false;
 
-                    if (part.east != pattern.south && pattern.south != CONNTYPE.ANY) return false;
-                    if (part.south != pattern.west && pattern.west != CONNTYPE.ANY) return false;
+                    //if (part.east != pattern.south && pattern.south != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validEast, pattern.south)) return false;
+
+                    //if (part.south != pattern.west && pattern.west != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validSouth, pattern.west)) return false;
+
                     return true;
                 case 2:
-                    if (part.south != pattern.north && pattern.north != CONNTYPE.ANY) return false;
-                    if (part.west != pattern.east && pattern.east != CONNTYPE.ANY) return false;
+                    //if (part.south != pattern.north && pattern.north != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validSouth, pattern.north)) return false;
+                    //if (part.west != pattern.east && pattern.east != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validWest, pattern.east)) return false;
+
                     //if (part.north != pattern.south && pattern.south != CONNTYPE.ANY) return false;
                     if (!CheckMatchable(part.validNorth, pattern.south)) return false;
 
-                    if (part.east != pattern.west && pattern.west != CONNTYPE.ANY) return false;
+                    //if (part.east != pattern.west && pattern.west != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validEast, pattern.west)) return false;
+
                     return true;
                 case 3:
-                    if (part.east != pattern.north && pattern.north != CONNTYPE.ANY) return false;
-                    if (part.south != pattern.east && pattern.east != CONNTYPE.ANY) return false;
-                    if (part.west != pattern.south && pattern.south != CONNTYPE.ANY) return false;
+                    //if (part.east != pattern.north && pattern.north != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validEast, pattern.north)) return false;
+
+                    //if (part.south != pattern.east && pattern.east != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validSouth, pattern.east)) return false;
+
+                    //if (part.west != pattern.south && pattern.south != CONNTYPE.ANY) return false;
+                    if (!CheckMatchable(part.validWest, pattern.south)) return false;
+
                     //if (part.north != pattern.west && pattern.west != CONNTYPE.ANY) return false;
                     if (!CheckMatchable(part.validNorth, pattern.west)) return false;
                     return true;
@@ -158,28 +199,12 @@ namespace MazeGen
             return false;
         }
 
-        private bool CheckMatchable(Matchable valids, CONNTYPE conn)
+        private bool CheckMatchable(Matchable valids, Matchable conn)
         {
-            switch (conn)
-            {
-                case CONNTYPE.NONE:
-                    if (valids.none) return true;
-                    break;
-                case CONNTYPE.FLOOR:
-                    if (valids.floor) return true;
-                    break;
-                case CONNTYPE.WALLFLOOR:
-                    if (valids.wallfloor) return true;
-                    break;
-                case CONNTYPE.CORRIDOR:
-                    if (valids.corridor) return true;
-                    break;
-                case CONNTYPE.ANY:
-                    //if (valids.any) return true;
-                    return true;
-                default:
-                    break;
-            }
+            if(valids.wall && valids.wall == conn.wall) { return true; }
+            if(valids.corridor && valids.corridor == conn.corridor) { return true; }
+            if(valids.floor && valids.floor == conn.floor) { return true; }
+            //if(valids.wallfloor == conn.wallfloor) { return true; }
             return false;
         }
     }

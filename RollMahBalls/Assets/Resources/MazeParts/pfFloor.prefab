@@ -53,6 +53,24 @@ MonoBehaviour:
       wallfloor: 0
       corridor: 0
       any: 0
+    validEast:
+      none: 0
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validSouth:
+      none: 0
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
+    validWest:
+      none: 0
+      floor: 0
+      wallfloor: 0
+      corridor: 0
+      any: 0
     north: 0
     east: 0
     south: 0
@@ -131,7 +149,7 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: 537634c0bde93a54884a55902ac50188, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a804e53e8fd423b44aaf159d79359e5a, type: 2}
+      objectReference: {fileID: 2100000, guid: 84f908d2db04146438ecc5d54d519a1a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 537634c0bde93a54884a55902ac50188, type: 3}
 --- !u!4 &2455431178544268922 stripped

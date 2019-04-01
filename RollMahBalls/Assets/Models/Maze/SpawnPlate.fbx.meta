@@ -4,15 +4,98 @@ ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Cube
+    100004: Cutter
+    100006: DeadEnd
+    100008: Floor
+    100010: SolidBlock
+    100012: SpawnPlate
+    100014: Straight
+    100016: TCross
+    100018: Turn
+    100020: Wall
+    100022: WallCorner
+    100024: WallOpening
+    100026: WallOuterCorner
+    100028: XCross
     400000: //RootNode
+    400002: Cube
+    400004: Cutter
+    400006: DeadEnd
+    400008: Floor
+    400010: SolidBlock
+    400012: SpawnPlate
+    400014: Straight
+    400016: TCross
+    400018: Turn
+    400020: Wall
+    400022: WallCorner
+    400024: WallOpening
+    400026: WallOuterCorner
+    400028: XCross
     2100000: Spawn
     2100002: MazeDefault
     2100004: SpawnColour
     2100006: Mazeasdasdassd
     2300000: //RootNode
+    2300002: Cube
+    2300004: Cutter
+    2300006: DeadEnd
+    2300008: Floor
+    2300010: SolidBlock
+    2300012: SpawnPlate
+    2300014: Straight
+    2300016: TCross
+    2300018: Turn
+    2300020: Wall
+    2300022: WallCorner
+    2300024: WallOpening
+    2300026: WallOuterCorner
+    2300028: XCross
     3300000: //RootNode
+    3300002: Cube
+    3300004: Cutter
+    3300006: DeadEnd
+    3300008: Floor
+    3300010: SolidBlock
+    3300012: SpawnPlate
+    3300014: Straight
+    3300016: TCross
+    3300018: Turn
+    3300020: Wall
+    3300022: WallCorner
+    3300024: WallOpening
+    3300026: WallOuterCorner
+    3300028: XCross
     4300000: SpawnPlate
+    4300002: DeadEnd
+    4300004: SolidBlock
+    4300006: WallOuterCorner
+    4300008: XCross
+    4300010: WallCorner
+    4300012: WallOpening
+    4300014: TCross
+    4300016: Turn
+    4300018: Wall
+    4300020: Straight
+    4300022: Cutter
+    4300024: Floor
+    4300026: Cube
     6400000: //RootNode
+    6400002: Cube
+    6400004: Cutter
+    6400006: DeadEnd
+    6400008: Floor
+    6400010: SolidBlock
+    6400012: SpawnPlate
+    6400014: Straight
+    6400016: TCross
+    6400018: Turn
+    6400020: Wall
+    6400022: WallCorner
+    6400024: WallOpening
+    6400026: WallOuterCorner
+    6400028: XCross
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -30,7 +113,7 @@ ModelImporter:
       name: SpawnColour
     second: {fileID: 2100000, guid: bc2eada3412dda44ab472ef38dcc4e24, type: 2}
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1

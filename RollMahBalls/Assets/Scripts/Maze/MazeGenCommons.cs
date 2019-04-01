@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace MazeGen
 {
-   public enum CONNTYPE { NONE, FLOOR, WALLFLOOR, CORRIDOR, ANY }
+    [System.Serializable]
+    public struct PiecesTableEntry
+    {
+        public string _name;
+        public float _dropchance;
+
+        public PiecesTableEntry(string prefabName, float chance)
+        {
+            _name = prefabName;
+            _dropchance = chance;
+        }
+    }
     [System.Serializable]
     public class MazePartDefinition
     {
@@ -15,6 +26,8 @@ namespace MazeGen
         [UnityEngine.SerializeField]
         public bool willGenerate = true;
         [UnityEngine.SerializeField]
+        public float generationWeight = 1000.0f;
+        [UnityEngine.SerializeField]
         public Matchable validNorth;
         [UnityEngine.SerializeField]
         public Matchable validEast;
@@ -22,10 +35,10 @@ namespace MazeGen
         public Matchable validSouth;
         [UnityEngine.SerializeField]
         public Matchable validWest;
-        public CONNTYPE north = CONNTYPE.NONE;
-        public CONNTYPE east = CONNTYPE.NONE;
-        public CONNTYPE south = CONNTYPE.NONE;
-        public CONNTYPE west = CONNTYPE.NONE;
+        //public CONNTYPE north = CONNTYPE.NONE;
+        //public CONNTYPE east = CONNTYPE.NONE;
+        //public CONNTYPE south = CONNTYPE.NONE;
+        //public CONNTYPE west = CONNTYPE.NONE;
         public MazePartPattern pattern;
         public int rotation = 0;
         public int row = -1;
@@ -40,10 +53,10 @@ namespace MazeGen
             validEast = data.validEast;
             validSouth = data.validSouth;
             validWest = data.validWest;
-            north = data.north;
-            east = data.east;
-            south = data.south;
-            west = data.west;
+            //north = data.north;
+            //east = data.east;
+            //south = data.south;
+            //west = data.west;
             pattern = data.pattern;
             rotation = data.rotation;
             row = r;
@@ -54,23 +67,31 @@ namespace MazeGen
     public class Matchable
     {
         [UnityEngine.SerializeField]
-        public bool none = false;
+        public bool wall = false;
         [UnityEngine.SerializeField]
         public bool floor = false;
         [UnityEngine.SerializeField]
         public bool wallfloor = false;
         [UnityEngine.SerializeField]
         public bool corridor = false;
-        [UnityEngine.SerializeField]
-        public bool any = false;
+        public Matchable(bool any=false) {
+            if (any)
+            {
+                wall = true;
+                floor = true;
+                wallfloor = true;
+                corridor = true;
+            }
+        }
+
     }
     [System.Serializable]
     public class MazePartPattern
     {
-        public CONNTYPE north = CONNTYPE.ANY;
-        public CONNTYPE east = CONNTYPE.ANY;
-        public CONNTYPE south = CONNTYPE.ANY;
-        public CONNTYPE west = CONNTYPE.ANY;
+        public Matchable north = new Matchable();
+        public Matchable east = new Matchable();
+        public Matchable south = new Matchable();
+        public Matchable west = new Matchable();
     }
     [System.Serializable]
     public class MazeData
@@ -81,26 +102,27 @@ namespace MazeGen
         public Dictionary<int, Dictionary<int, MazePartDefinition>> Map { get { return map; } private set { } }
         public void InsertMapData(int row, int column, MazePartDefinition data)
         {
+           
             map[row][column] = new MazePartDefinition( data, row,column);
             switch (data.rotation)
             {
                 case 1:
-                    map[row][column].north = data.west;
-                    map[row][column].east = data.north;
-                    map[row][column].south = data.east;
-                    map[row][column].west = data.south;
+                    map[row][column].validNorth = data.validWest;
+                    map[row][column].validEast = data.validNorth;
+                    map[row][column].validSouth = data.validEast;
+                    map[row][column].validWest = data.validSouth;
                     break;
                 case 2:
-                    map[row][column].north = data.south;
-                    map[row][column].east = data.west;
-                    map[row][column].south = data.north;
-                    map[row][column].west = data.east;
+                    map[row][column].validNorth = data.validSouth;
+                    map[row][column].validEast = data.validWest;
+                    map[row][column].validSouth = data.validNorth;
+                    map[row][column].validWest = data.validEast;
                     break;
                 case 3:
-                    map[row][column].north = data.east;
-                    map[row][column].east = data.south;
-                    map[row][column].south = data.west;
-                    map[row][column].west = data.north;
+                    map[row][column].validNorth = data.validEast;
+                    map[row][column].validEast = data.validSouth;
+                    map[row][column].validSouth = data.validWest;
+                    map[row][column].validWest = data.validNorth;
                     break;
             }
         }
@@ -123,65 +145,63 @@ namespace MazeGen
             return pattern;
         }
 
-        private CONNTYPE NorthConnMatch(int row, int column)
+        private Matchable NorthConnMatch(int row, int column)
         {
             if (row == 0)
             {
-                return CONNTYPE.NONE;
+                return new Matchable() { wall = true } ;
             }
             else
             {
-                return map[row - 1][column].south;
+                return map[row - 1][column].validSouth;
             }
         }
-        private CONNTYPE SouthConnMatch(int row, int column)
+        private Matchable WestConnMatch(int row, int column)
+        {
+            if (column == 0)
+            {
+                return new Matchable() { wall = true };
+            }
+            else
+            {
+                return map[row][column-1].validEast;
+            }
+        }
+        private Matchable SouthConnMatch(int row, int column)
         {
             if (row == height)
             {
-                return CONNTYPE.NONE;
+                return new Matchable() { wall = true };
             }
             else
             {
                 if (map[row + 1].ContainsKey(column))
                 {
-                    return map[row + 1][column].north;
+                    return map[row + 1][column].validNorth;
                 }
                 else
                 {
-                    return CONNTYPE.ANY;
+                    return new Matchable(true);
                 }
             }
         }
-        private CONNTYPE WestConnMatch(int row, int column)
-        {
-            if (column == 0)
-            {
-                return CONNTYPE.NONE;
-            }
-            else
-            {
-                return map[row][column-1].east;
-            }
-        }
-        private CONNTYPE EastConnMatch(int row, int column)
+        private Matchable EastConnMatch(int row, int column)
         {
             if (column == width)
             {
-                return CONNTYPE.NONE;
+                return new Matchable() { wall = true };
             }
             else
             {
-                return CONNTYPE.ANY;
-            }
-            /*if (map[row].ContainsKey(column + 1))
+            if (map[row].ContainsKey(column + 1))
                 {
-                    return map[row][column + 1].west;
+                    return map[row][column + 1].validWest;
                 }
                 else
                 {
-                    return CONNTYPE.ANY;
+                    return new Matchable(true);
                 }
-            }*/
+            }
         }
 
         public void ClearMap()

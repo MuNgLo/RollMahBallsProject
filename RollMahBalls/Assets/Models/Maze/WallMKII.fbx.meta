@@ -1,20 +1,20 @@
 fileFormatVersion: 2
-guid: 867b3c2d0b4bad647982abdbc1216112
+guid: f0d6187ce49a7d64685c2f608baabc9f
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: Material
+    2100000: Mazeasdasdassd
     2300000: //RootNode
     3300000: //RootNode
-    4300000: WallCorner
+    4300000: WallMKII
     6400000: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
+      name: Mazeasdasdassd
     second: {fileID: 2100000, guid: a804e53e8fd423b44aaf159d79359e5a, type: 2}
   materials:
     importMaterials: 0
