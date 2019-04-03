@@ -44,19 +44,21 @@ namespace MazeGen
         public int row = -1;
         public int column = -1;
         public MazePartDefinition()
-        { }
+        {
+            validNorth = new Matchable();
+            validEast = new Matchable();
+            validSouth = new Matchable();
+            validWest = new Matchable();
+        }
         public MazePartDefinition(MazePartDefinition data, int r, int c)
         {
             prefabName = data.prefabName;
+            generationWeight = data.generationWeight;
             willGenerate = data.willGenerate;
             validNorth = data.validNorth;
             validEast = data.validEast;
             validSouth = data.validSouth;
             validWest = data.validWest;
-            //north = data.north;
-            //east = data.east;
-            //south = data.south;
-            //west = data.west;
             pattern = data.pattern;
             rotation = data.rotation;
             row = r;
@@ -96,34 +98,47 @@ namespace MazeGen
     [System.Serializable]
     public class MazeData
     {
-        public int width = 20, height = 20;
+        public int width = 20, height = 20, nbOfRooms = 1;
         public int seed = 3333;
         Dictionary<int, Dictionary<int, MazePartDefinition>> map;
         public Dictionary<int, Dictionary<int, MazePartDefinition>> Map { get { return map; } private set { } }
-        public void InsertMapData(int row, int column, MazePartDefinition data)
+        public void InsertMapData(int row, int column, List<MazePartDefinition> data)
+        {
+            foreach(MazePartDefinition def in data)
+            {
+                def.generationWeight = -1;
+                InsertMapData(row + def.row, column + def.column, def, true);
+            }
+        }
+
+
+        public void InsertMapData(int row, int column, MazePartDefinition data, bool skipRotation=false)
         {
            
             map[row][column] = new MazePartDefinition( data, row,column);
-            switch (data.rotation)
+            if (!skipRotation)
             {
-                case 1:
-                    map[row][column].validNorth = data.validWest;
-                    map[row][column].validEast = data.validNorth;
-                    map[row][column].validSouth = data.validEast;
-                    map[row][column].validWest = data.validSouth;
-                    break;
-                case 2:
-                    map[row][column].validNorth = data.validSouth;
-                    map[row][column].validEast = data.validWest;
-                    map[row][column].validSouth = data.validNorth;
-                    map[row][column].validWest = data.validEast;
-                    break;
-                case 3:
-                    map[row][column].validNorth = data.validEast;
-                    map[row][column].validEast = data.validSouth;
-                    map[row][column].validSouth = data.validWest;
-                    map[row][column].validWest = data.validNorth;
-                    break;
+                switch (data.rotation)
+                {
+                    case 1:
+                        map[row][column].validNorth = data.validWest;
+                        map[row][column].validEast = data.validNorth;
+                        map[row][column].validSouth = data.validEast;
+                        map[row][column].validWest = data.validSouth;
+                        break;
+                    case 2:
+                        map[row][column].validNorth = data.validSouth;
+                        map[row][column].validEast = data.validWest;
+                        map[row][column].validSouth = data.validNorth;
+                        map[row][column].validWest = data.validEast;
+                        break;
+                    case 3:
+                        map[row][column].validNorth = data.validEast;
+                        map[row][column].validEast = data.validSouth;
+                        map[row][column].validSouth = data.validWest;
+                        map[row][column].validWest = data.validNorth;
+                        break;
+                }
             }
         }
         public MazePartDefinition GetMapData(int row, int column)
@@ -169,13 +184,13 @@ namespace MazeGen
         }
         private Matchable SouthConnMatch(int row, int column)
         {
-            if (row == height)
+            if (row == height-1)
             {
                 return new Matchable() { wall = true };
             }
             else
             {
-                if (map[row + 1].ContainsKey(column))
+                if (map[row + 1][column].prefabName!="unset")
                 {
                     return map[row + 1][column].validNorth;
                 }
@@ -187,19 +202,19 @@ namespace MazeGen
         }
         private Matchable EastConnMatch(int row, int column)
         {
-            if (column == width)
+            if (column == width - 1)
             {
                 return new Matchable() { wall = true };
             }
             else
             {
-            if (map[row].ContainsKey(column + 1))
+            if (map[row][column+1].prefabName == "unset")
                 {
-                    return map[row][column + 1].validWest;
+                    return new Matchable(true);
                 }
                 else
                 {
-                    return new Matchable(true);
+                    return map[row][column + 1].validWest;
                 }
             }
         }
@@ -211,13 +226,13 @@ namespace MazeGen
             if(width < 5) { width = 5; }
 
             map = new Dictionary<int, Dictionary<int, MazePartDefinition>>();
-            for (int row = 0; row <= height; row++)
+            for (int row = 0; row < height; row++)
             {
                 map[row] = new Dictionary<int, MazePartDefinition>();
-                /*for (int column = 0; column < width; column++)
+                for (int column = 0; column < width; column++)
                 {
                     map[row][column] = new MazePartDefinition();
-                }*/
+                }
             }
         }
 

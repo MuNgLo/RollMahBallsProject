@@ -8,10 +8,12 @@ namespace MazeGen
     public class PiecesTable
     {
         public List<MazePartDefinition> _dropTable;
+        private PRNGMarsenneTwister rng;
 
-        public PiecesTable()
+        public PiecesTable(PRNGMarsenneTwister rnd)
         {
             _dropTable = new List<MazePartDefinition>();
+            rng = rnd;
         }
 
         public void AddItem(MazePartDefinition entry)
@@ -31,7 +33,8 @@ namespace MazeGen
         public MazePartDefinition GetRandomPiece(float tweak = 0.0f)
         {
             float totalDropChance = TotalDropChance();
-            float roll = UnityEngine.Random.Range(0.0f, 1.0f) - (tweak / 100.0f);
+            //float roll = UnityEngine.Random.Range(0.0f, 1.0f) - (tweak / 100.0f);
+            float roll = (rng.Next(0,100)/100.0f)  - (tweak / 100.0f);
             roll = UnityEngine.Mathf.Clamp(roll, 0.0f, 1.0f);
 
 

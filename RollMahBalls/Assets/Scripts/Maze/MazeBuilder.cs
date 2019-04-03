@@ -27,6 +27,7 @@ namespace MazeGen
 
         private void SpawnPart(int row, int column, MazePartDefinition def)
         {
+            if(def == null || def.prefabName=="unset") { return; }
             try
             {
                 Transform maze = GameObject.Find("Maze").transform;
