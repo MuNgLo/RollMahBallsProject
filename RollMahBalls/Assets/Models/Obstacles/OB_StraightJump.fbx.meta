@@ -1,78 +1,17 @@
 fileFormatVersion: 2
-guid: 66268f8cce2920842b40182dead68af4
+guid: 216a91248c3e3b14bbdac3d2fecdc126
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: DeadEndMKII
-    100004: Floor
-    100006: SolidBlock
-    100008: StraightMKII
-    100010: TCrossMKII
-    100012: TurnMKII
-    100014: Wall.001
-    100016: WallCornerMKII
-    100018: WallMKII
-    100020: WallOpeningMKII
-    100022: WallOuterCorner.001
-    100024: WallOuterCornerMKII
-    100026: XCrossMKII
     400000: //RootNode
-    400002: DeadEndMKII
-    400004: Floor
-    400006: SolidBlock
-    400008: StraightMKII
-    400010: TCrossMKII
-    400012: TurnMKII
-    400014: Wall.001
-    400016: WallCornerMKII
-    400018: WallMKII
-    400020: WallOpeningMKII
-    400022: WallOuterCorner.001
-    400024: WallOuterCornerMKII
-    400026: XCrossMKII
-    2100000: Mazeasdasdassd
     2300000: //RootNode
-    2300002: DeadEndMKII
-    2300004: Floor
-    2300006: SolidBlock
-    2300008: StraightMKII
-    2300010: TCrossMKII
-    2300012: TurnMKII
-    2300014: Wall.001
-    2300016: WallCornerMKII
-    2300018: WallMKII
-    2300020: WallOpeningMKII
-    2300022: WallOuterCorner.001
-    2300024: WallOuterCornerMKII
-    2300026: XCrossMKII
     3300000: //RootNode
-    3300002: DeadEndMKII
-    3300004: Floor
-    3300006: SolidBlock
-    3300008: StraightMKII
-    3300010: TCrossMKII
-    3300012: TurnMKII
-    3300014: Wall.001
-    3300016: WallCornerMKII
-    3300018: WallMKII
-    3300020: WallOpeningMKII
-    3300022: WallOuterCorner.001
-    3300024: WallOuterCornerMKII
-    3300026: XCrossMKII
-    4300000: WallOpeningMKII
-    4300002: WallOuterCorner.001
-    4300004: Wall.001
-    4300006: DeadEndMKII
-    4300008: SolidBlock
-    4300010: WallOuterCornerMKII
-    4300012: XCrossMKII
-    4300014: WallCornerMKII
-    4300016: TCrossMKII
-    4300018: TurnMKII
-    4300020: WallMKII
-    4300022: StraightMKII
-    4300024: Floor
+    4300000: TrackCurve.001
+    4300002: BezierCurve.001
+    4300004: NurbsPath.001
+    4300006: BezierCurve.002
+    6400000: //RootNode
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -106,14 +45,14 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
@@ -129,13 +68,13 @@ ModelImporter:
     hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2

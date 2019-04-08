@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3022498665003956602}
   - component: {fileID: 6479141569257082444}
+  - component: {fileID: 1207806726012490691}
   m_Layer: 0
   m_Name: pfTCross
   m_TagString: Untagged
@@ -47,42 +48,67 @@ MonoBehaviour:
   partDef:
     prefabName: unset
     willGenerate: 1
+    generationWeight: 1000
     validNorth:
-      none: 0
+      wall: 1
       floor: 0
       wallfloor: 0
       corridor: 0
-      any: 0
     validEast:
-      none: 0
+      wall: 1
       floor: 0
       wallfloor: 0
       corridor: 0
-      any: 0
     validSouth:
-      none: 0
+      wall: 1
       floor: 0
       wallfloor: 0
       corridor: 0
-      any: 0
     validWest:
-      none: 0
+      wall: 1
       floor: 0
       wallfloor: 0
       corridor: 0
-      any: 0
-    north: 0
-    east: 0
-    south: 0
-    west: 0
     pattern:
-      north: 4
-      east: 4
-      south: 4
-      west: 4
+      north:
+        wall: 0
+        floor: 0
+        wallfloor: 0
+        corridor: 0
+      east:
+        wall: 0
+        floor: 0
+        wallfloor: 0
+        corridor: 0
+      south:
+        wall: 0
+        floor: 0
+        wallfloor: 0
+        corridor: 0
+      west:
+        wall: 0
+        floor: 0
+        wallfloor: 0
+        corridor: 0
     rotation: 0
     row: -1
     column: -1
+--- !u!114 &1207806726012490691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8244642600234735922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2af9b547ec754a043ad520e27034555e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultFloor: {fileID: 2100000, guid: 84f908d2db04146438ecc5d54d519a1a, type: 2}
+  defaultWall: {fileID: 2100000, guid: a804e53e8fd423b44aaf159d79359e5a, type: 2}
+  defaultAreaA: {fileID: 2100000, guid: 2574996d1a46eb349a34297022cd947e, type: 2}
+  looks: {fileID: 7878587765495553581}
 --- !u!1001 &7878587765497710157
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -151,6 +177,12 @@ PrefabInstance:
 --- !u!4 &7878587765497846989 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: acb20572d4b227149985193d1d26ce1d,
+    type: 3}
+  m_PrefabInstance: {fileID: 7878587765497710157}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7878587765495553581 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: acb20572d4b227149985193d1d26ce1d,
     type: 3}
   m_PrefabInstance: {fileID: 7878587765497710157}
   m_PrefabAsset: {fileID: 0}

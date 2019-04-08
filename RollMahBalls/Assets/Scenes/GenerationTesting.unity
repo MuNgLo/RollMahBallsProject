@@ -215,7 +215,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 325921459}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -237,6 +237,7 @@ MonoBehaviour:
   width: 3
   height: 3
   rotation: 0
+  nbOfMaxDoors: 3
   roomarea:
   - prefabName: pfWallCorner
     willGenerate: 0
@@ -842,12 +843,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 1
   genRooms: 1
+  genSpawns: 1
   genFiller: 1
   mData:
-    width: 26
-    height: 26
-    nbOfRooms: 16
-    seed: 342342
+    width: 40
+    height: 40
+    nbOfRooms: 20
+    nbOfSpawns: 16
+    seed: 918723987
   pieces: []
   specials: []
 --- !u!114 &985255232
@@ -912,7 +915,7 @@ MonoBehaviour:
     column: -1
   - prefabName: pfStraight
     willGenerate: 1
-    generationWeight: 1000
+    generationWeight: 1500
     validNorth:
       wall: 0
       floor: 0
@@ -1006,7 +1009,7 @@ MonoBehaviour:
     column: -1
   - prefabName: pfTurn
     willGenerate: 1
-    generationWeight: 1000
+    generationWeight: 1500
     validNorth:
       wall: 0
       floor: 0
@@ -1108,9 +1111,9 @@ MonoBehaviour:
       corridor: 0
     validEast:
       wall: 0
-      floor: 1
+      floor: 0
       wallfloor: 0
-      corridor: 0
+      corridor: 1
     validSouth:
       wall: 0
       floor: 1
@@ -1194,7 +1197,7 @@ MonoBehaviour:
     column: -1
   - prefabName: pfDeadEnd
     willGenerate: 1
-    generationWeight: 1000
+    generationWeight: 50
     validNorth:
       wall: 0
       floor: 1
@@ -1454,6 +1457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6fb594663d33114abb626c161fc7bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AreaA: []
 --- !u!1 &1315908654
 GameObject:
   m_ObjectHideFlags: 0
@@ -1738,6 +1742,7 @@ MonoBehaviour:
   width: 5
   height: 5
   rotation: 0
+  nbOfMaxDoors: 4
   roomarea:
   - prefabName: pfWallCorner
     willGenerate: 0
@@ -2124,8 +2129,8 @@ MonoBehaviour:
       wallfloor: 0
       corridor: 0
     validEast:
-      wall: 0
-      floor: 1
+      wall: 1
+      floor: 0
       wallfloor: 0
       corridor: 0
     validSouth:
@@ -2134,8 +2139,8 @@ MonoBehaviour:
       wallfloor: 0
       corridor: 0
     validWest:
-      wall: 1
-      floor: 0
+      wall: 0
+      floor: 1
       wallfloor: 0
       corridor: 0
     pattern:

@@ -8,6 +8,7 @@ public class LookAtObject : MonoBehaviour
     public LayerMask blockers;
     public GameObject target;
     public TwinstickInput tw;
+    public float maxDistance = 2.0f;
     public float vOffset = 1.5f;
     public float vFocus = 2.5f;
     public bool mouseCam = true;
@@ -33,23 +34,23 @@ public class LookAtObject : MonoBehaviour
             else
             {
                 hOffset = Quaternion.Euler(0.0f, Input.GetAxis("Mouse X"), 0.0f) * hOffset;
-                vOffset = Mathf.Clamp(vOffset + Input.GetAxis("Mouse Y") * 0.25f, 0.5f, 2.5f);
+                vOffset = Mathf.Clamp(vOffset + Input.GetAxis("Mouse Y") * 0.025f, 0.1f, 1.5f);
             }
             Vector3 castOrigin = target.transform.position + Vector3.up * vFocus;
-            float distance = 5.0f;
+            float currentDistance = maxDistance;
             Ray cast = new Ray(castOrigin, hOffset);
             RaycastHit hitinfo = new RaycastHit();
-            if(Physics.Raycast(cast,out hitinfo, distance, blockers))
+            if(Physics.Raycast(cast,out hitinfo, currentDistance, blockers))
             {
-                distance = hitinfo.distance - 0.2f;
+                currentDistance = hitinfo.distance - 0.2f;
             }
-            Vector3 newPos = castOrigin + hOffset * distance;
+            Vector3 newPos = castOrigin + hOffset * currentDistance;
 
             this.transform.position = newPos;
             this.transform.LookAt(target.transform.position + Vector3.up * vOffset);
             if (debug)
             {
-                Debug.DrawLine(cast.origin, castOrigin + cast.direction * distance, Color.red);
+                Debug.DrawLine(cast.origin, castOrigin + cast.direction * currentDistance, Color.red);
                 Debug.DrawLine(cast.origin + Vector3.up * 0.05f, newPos, Color.yellow);
             }
         }

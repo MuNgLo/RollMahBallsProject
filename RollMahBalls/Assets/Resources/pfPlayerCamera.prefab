@@ -102,7 +102,7 @@ MonoBehaviour:
   target: {fileID: 0}
   tw: {fileID: 0}
   vOffset: 1.5
-  vFocus: 2.5
+  vFocus: 0.45
   mouseCam: 1
   debug: 0
 --- !u!114 &359658023

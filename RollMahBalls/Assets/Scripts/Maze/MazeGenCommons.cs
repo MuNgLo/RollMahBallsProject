@@ -35,20 +35,30 @@ namespace MazeGen
         public Matchable validSouth;
         [UnityEngine.SerializeField]
         public Matchable validWest;
-        //public CONNTYPE north = CONNTYPE.NONE;
-        //public CONNTYPE east = CONNTYPE.NONE;
-        //public CONNTYPE south = CONNTYPE.NONE;
-        //public CONNTYPE west = CONNTYPE.NONE;
         public MazePartPattern pattern;
         public int rotation = 0;
         public int row = -1;
         public int column = -1;
         public MazePartDefinition()
         {
-            validNorth = new Matchable();
-            validEast = new Matchable();
-            validSouth = new Matchable();
-            validWest = new Matchable();
+            validNorth = new Matchable(true);
+            validEast = new Matchable(true);
+            validSouth = new Matchable(true);
+            validWest = new Matchable(true);
+        }
+        public MazePartDefinition(MazePartDefinition data)
+        {
+            prefabName = data.prefabName;
+            generationWeight = data.generationWeight;
+            willGenerate = data.willGenerate;
+            validNorth = data.validNorth;
+            validEast = data.validEast;
+            validSouth = data.validSouth;
+            validWest = data.validWest;
+            pattern = data.pattern;
+            rotation = data.rotation;
+            row = data.row;
+            column = data.column;
         }
         public MazePartDefinition(MazePartDefinition data, int r, int c)
         {
@@ -98,7 +108,7 @@ namespace MazeGen
     [System.Serializable]
     public class MazeData
     {
-        public int width = 20, height = 20, nbOfRooms = 1;
+        public int width = 20, height = 20, nbOfRooms = 1, nbOfSpawns = 1;
         public int seed = 3333;
         Dictionary<int, Dictionary<int, MazePartDefinition>> map;
         public Dictionary<int, Dictionary<int, MazePartDefinition>> Map { get { return map; } private set { } }
@@ -107,7 +117,14 @@ namespace MazeGen
             foreach(MazePartDefinition def in data)
             {
                 def.generationWeight = -1;
-                InsertMapData(row + def.row, column + def.column, def, true);
+                if(def.prefabName == "pfWallOpening")
+                {
+                    InsertMapData(row + def.row, column + def.column, def);
+                }
+                else
+                {
+                    InsertMapData(row + def.row, column + def.column, def, true);
+                }
             }
         }
 
