@@ -7,7 +7,7 @@ namespace MazeGen
     {
         private MazeParts parts;
         private MazeMaker maker;
-        public List<MazePartDefinition> AreaA;
+        public List<ConnectionData> connections;
         // Start is called before the first frame update
         void Start()
         {
@@ -45,11 +45,10 @@ namespace MazeGen
                 part.transform.rotation = Quaternion.Euler(0.0f, 90.0f * def.rotation, 0.0f);
                 part.name = $"{def.prefabName.Replace("pf", "")} ROW:{def.row} COLUMN:{def.column}";
                 // If area A change material
-                if(AreaA.Exists(p=>p.row == def.row && p.column == def.column))
-                {
-                    //Debug.Log($"Painting part as AreaA {part.name}.");
-                    part.GetComponent<MazePiece>().AssignArea(true);
-                }
+                int cDataIndex = connections.FindIndex(p => p.row == def.row && p.column == def.column);
+                connections[cDataIndex].inGameObject = part;
+                part.GetComponent<MazePiece>().AssignArea(connections[cDataIndex]);
+                
                 part.transform.position = new Vector3(column * 7, 0, row * -7);
             }
             catch (System.Exception)

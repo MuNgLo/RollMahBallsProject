@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 namespace MazeGen
 {
     [System.Serializable]
+    public class ConnectionData
+    {
+        public int areaIndex = 0;
+        public int row = 0, column = 0;
+        public UnityEngine.GameObject inGameObject;
+        public int areaNorth = 0, areaEast = 0, areaSouth = 0, areaWest = 0;
+        public int openNorth = 0, openEast = 0, openSouth = 0, openWest = 0;
+    }
+    [System.Serializable]
     public struct PiecesTableEntry
     {
         public string _name;
@@ -127,7 +136,7 @@ namespace MazeGen
                 }
             }
         }
-
+        
 
         public void InsertMapData(int row, int column, MazePartDefinition data, bool skipRotation=false)
         {

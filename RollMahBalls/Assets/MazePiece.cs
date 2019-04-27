@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MazeGen;
 
 public class MazePiece : MonoBehaviour
 {
@@ -10,8 +11,8 @@ public class MazePiece : MonoBehaviour
 
     public MeshRenderer looks;
 
-    public void AssignArea(bool areaA) {
-        if (areaA)
+    public void AssignArea(ConnectionData areaA) {
+        if (areaA.areaIndex == 1)
         {
             Material[] materials = looks.materials;
             if (materials.Length <= 1)

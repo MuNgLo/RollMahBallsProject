@@ -86,42 +86,138 @@ namespace MazeGen
 
         private void ConnectivityCheck()
         {
-            List<MazePartDefinition> AreaA = new List<MazePartDefinition>();
-            AreaA.Add(mData.Map[0][0]);
-            foreach(int row in mData.Map.Keys)
+            // Build ConnectionDatas
+            List<ConnectionData> connectionDatas = GetComponent<MazeBuilder>().connections;
+            int areaIndex = 0;
+            foreach (int ROW in mData.Map.Keys)
             {
-                foreach(int column in mData.Map[row].Keys)
+                foreach (int COL in mData.Map[ROW].Keys)
                 {
-                    if (row == 0 && column == 0) { continue; }
-                    bool added = false;
-                    //check North
-                    if (!added && mData.Map.ContainsKey(row - 1))
+                    areaIndex++;
+                    ConnectionData cData = new ConnectionData()
                     {
-                        if (mData.Map[row - 1][column].validSouth.corridor || mData.Map[row - 1][column].validSouth.floor)
-                        {
-                            if (mData.Map[row][column].validNorth.corridor || mData.Map[row][column].validNorth.floor)
-                            {
-                                AreaA.Add(mData.Map[row][column]);
-                                added = true;
-                            }
-                        }
-                    }
-
-                        //check West
-                        if (!added && mData.Map.ContainsKey(column - 1))
-                        {
-                            if (mData.Map[row][column - 1].validEast.corridor || mData.Map[row][column - 1].validEast.floor)
-                            {
-                                if (mData.Map[row][column].validWest.corridor || mData.Map[row][column].validWest.floor)
-                                {
-                                    AreaA.Add(mData.Map[row][column]);
-                                added = true;
-                                }
-                            }
-                        }
+                        row = ROW, column = COL, areaIndex = areaIndex
+                    };
+                    connectionDatas.Add(cData);
                 }
             }
-            GetComponent<MazeBuilder>().AreaA = AreaA;   
+            // Run connectivity check
+            int abortIn = 250;
+            while (abortIn > 0 && connectionDatas.Exists(p => p.areaIndex != 1)) {
+                foreach (ConnectionData cData in connectionDatas)
+                {
+                    if (cData.areaIndex > 1)
+                    {
+                        UpdateConnectivityOnConnectionData(connectionDatas.FindIndex(p => p.row == cData.row && p.column == cData.column));
+                    }
+                }
+                abortIn--;
+            }
+            if(abortIn < 1)
+            {
+                Debug.Log("Connectivity Check aborted");
+            }
+        }
+
+        private List<ConnectionData> UpdateConnectivityOnConnectionData(int index)
+        {
+            List<ConnectionData> connectionDatas = GetComponent<MazeBuilder>().connections;
+            int ROW = connectionDatas[index].row;
+            int COL = connectionDatas[index].column;
+            //check North
+            if (mData.Map.ContainsKey(ROW - 1))
+            {
+                if (mData.Map[ROW - 1][COL].validSouth.corridor || mData.Map[ROW - 1][COL].validSouth.floor)
+                {
+                    if (mData.Map[ROW][COL].validNorth.corridor || mData.Map[ROW][COL].validNorth.floor)
+                    {
+                        connectionDatas[index].openNorth = 1; // flag north as connected
+                        if (connectionDatas[index].areaIndex != connectionDatas.Find(p => p.row == ROW - 1 && p.column == COL).areaIndex)
+                        {
+                            MergeAreas(connectionDatas[index].areaIndex, connectionDatas.Find(p => p.row == ROW - 1 && p.column == COL).areaIndex);
+                        }
+                    }
+                }
+            }
+            //check East
+            if (mData.Map.ContainsKey(COL + 1))
+            {
+                if (mData.Map[ROW][COL + 1].validWest.corridor || mData.Map[ROW][COL + 1].validWest.floor)
+                {
+                    if (mData.Map[ROW][COL].validEast.corridor || mData.Map[ROW][COL].validEast.floor)
+                    {
+                        connectionDatas[index].openEast = 1; // flag east as connected
+                        if (connectionDatas[index].areaIndex != connectionDatas.Find(p => p.row == ROW && p.column == COL + 1).areaIndex)
+                        {
+                            MergeAreas(connectionDatas[index].areaIndex, connectionDatas.Find(p => p.row == ROW && p.column == COL + 1).areaIndex);
+                        }
+                    }
+                }
+            }
+            //check South
+            if (mData.Map.ContainsKey(ROW + 1))
+            {
+                if (mData.Map[ROW + 1][COL].validNorth.corridor || mData.Map[ROW + 1][COL].validNorth.floor)
+                {
+                    if (mData.Map[ROW][COL].validSouth.corridor || mData.Map[ROW][COL].validSouth.floor)
+                    {
+                        connectionDatas[index].openSouth = 1; // flag south as connected
+                        if (connectionDatas[index].areaIndex != connectionDatas.Find(p => p.row == ROW + 1 && p.column == COL).areaIndex)
+                        {
+                            MergeAreas(connectionDatas[index].areaIndex, connectionDatas.Find(p => p.row == ROW + 1 && p.column == COL).areaIndex);
+                        }
+                    }
+                }
+            }
+            //check West
+            if (mData.Map.ContainsKey(COL - 1))
+            {
+                if (mData.Map[ROW][COL - 1].validEast.corridor || mData.Map[ROW][COL - 1].validEast.floor)
+                {
+                    if (mData.Map[ROW][COL].validWest.corridor || mData.Map[ROW][COL].validWest.floor)
+                    {
+                        connectionDatas[index].openWest = 1; // flag west as connected
+                        if (connectionDatas[index].areaIndex != connectionDatas.Find(p => p.row == ROW && p.column == COL - 1).areaIndex)
+                        {
+                            MergeAreas(connectionDatas[index].areaIndex, connectionDatas.Find(p => p.row == ROW && p.column == COL - 1).areaIndex);
+                        }
+                    }
+                }
+            }
+            return connectionDatas;
+        }
+
+        private void MergeAreas(int areaA, int areaB)
+        {
+            List<ConnectionData> connectionDatas = GetComponent<MazeBuilder>().connections;
+            int newAreaIndex = areaA;
+            if(areaA < 1) { newAreaIndex = areaB; }
+            if(areaB < 1) { newAreaIndex = areaA; }
+            if(areaA > 0 && areaB > 0)
+            {
+                if(areaA < areaB) { newAreaIndex = areaA; }
+                if(areaA > areaB) { newAreaIndex = areaB; }
+            }
+            if(newAreaIndex < 1)
+            {
+                Debug.Log("NewAreaIndex is less than 1!!! abort!!");
+                return;
+            }
+
+
+            if (areaA == newAreaIndex)
+            {
+                foreach (ConnectionData cData in connectionDatas.FindAll(p => p.areaIndex == areaB))
+                {
+                    cData.areaIndex = areaA;
+                }
+            }else if (areaB == newAreaIndex)
+            {
+                foreach (ConnectionData cData in connectionDatas.FindAll(p => p.areaIndex == areaA))
+                {
+                    cData.areaIndex = areaB;
+                }
+            }
         }
 
         private void DeleteMazeGameObjects()
