@@ -846,11 +846,11 @@ MonoBehaviour:
   genSpawns: 1
   genFiller: 1
   mData:
-    width: 40
-    height: 40
+    width: 60
+    height: 60
     nbOfRooms: 20
     nbOfSpawns: 16
-    seed: 918723987
+    seed: 654654
   pieces: []
   specials: []
 --- !u!114 &985255232
@@ -1457,7 +1457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6fb594663d33114abb626c161fc7bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AreaA: []
+  connections: []
 --- !u!1 &1315908654
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 namespace MazeGen
 {
@@ -11,6 +12,8 @@ namespace MazeGen
         public bool genSpawns = true;
         public bool genFiller = true;
         public MazeData mData;
+
+        private List<ConnectionData> connectionDatas;// = GetComponent<MazeBuilder>().connections;
 
         //private System.Random rng;
         private PRNGMarsenneTwister rng;
@@ -23,6 +26,7 @@ namespace MazeGen
         // Start is called before the first frame update
         void Start()
         {
+            connectionDatas = GetComponent<MazeBuilder>().connections;
             parts = GetComponent<MazeParts>();
             roomlist = transform.Find("Rooms").GetComponent<RoomDefinitions>();
             mData.ClearMap();
@@ -34,7 +38,7 @@ namespace MazeGen
 
         }
 
-        public void GenerateMazeData()
+        public async void GenerateMazeData()
         {
             if (debug)
             {
@@ -74,7 +78,7 @@ namespace MazeGen
                 }
             }
             // Check connectivity and fix
-            ConnectivityCheck();
+            await ConnectivityCheck();
 
             if (debug)
             {
@@ -84,10 +88,10 @@ namespace MazeGen
             ValidateMapData();
         }
 
-        private void ConnectivityCheck()
+        private async Task ConnectivityCheck()
         {
             // Build ConnectionDatas
-            List<ConnectionData> connectionDatas = GetComponent<MazeBuilder>().connections;
+            //List<ConnectionData> connectionDatas = GetComponent<MazeBuilder>().connections;
             int areaIndex = 0;
             foreach (int ROW in mData.Map.Keys)
             {
@@ -102,8 +106,9 @@ namespace MazeGen
                 }
             }
             // Run connectivity check
-            int abortIn = 250;
-            while (abortIn > 0 && connectionDatas.Exists(p => p.areaIndex != 1)) {
+            /*int abortIn = 250;
+            while (abortIn > 0 && connectionDatas.Exists(p => p.areaIndex != 1))
+            {
                 foreach (ConnectionData cData in connectionDatas)
                 {
                     if (cData.areaIndex > 1)
@@ -112,16 +117,31 @@ namespace MazeGen
                     }
                 }
                 abortIn--;
-            }
-            if(abortIn < 1)
+            }*/
+            await Task.Run(() =>
+            {
+                int abortIn = 250;
+                while (abortIn > 0 && connectionDatas.Exists(p => p.areaIndex != 1))
+                {
+                    foreach (ConnectionData cData in connectionDatas)
+                    {
+                        if (cData.areaIndex > 1)
+                        {
+                            UpdateConnectivityOnConnectionData(connectionDatas.FindIndex(p => p.row == cData.row && p.column == cData.column));
+                        }
+                    }
+                    abortIn--;
+                }
+            });
+            /*if (abortIn < 1)
             {
                 Debug.Log("Connectivity Check aborted");
-            }
+            }*/
         }
 
-        private List<ConnectionData> UpdateConnectivityOnConnectionData(int index)
+        private void UpdateConnectivityOnConnectionData(int index)
         {
-            List<ConnectionData> connectionDatas = GetComponent<MazeBuilder>().connections;
+            
             int ROW = connectionDatas[index].row;
             int COL = connectionDatas[index].column;
             //check North
@@ -184,12 +204,11 @@ namespace MazeGen
                     }
                 }
             }
-            return connectionDatas;
         }
 
         private void MergeAreas(int areaA, int areaB)
         {
-            List<ConnectionData> connectionDatas = GetComponent<MazeBuilder>().connections;
+            //List<ConnectionData> connectionDatas = GetComponent<MazeBuilder>().connections;
             int newAreaIndex = areaA;
             if(areaA < 1) { newAreaIndex = areaB; }
             if(areaB < 1) { newAreaIndex = areaA; }
