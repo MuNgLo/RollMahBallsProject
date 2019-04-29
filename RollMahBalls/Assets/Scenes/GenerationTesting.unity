@@ -850,7 +850,7 @@ MonoBehaviour:
     height: 60
     nbOfRooms: 20
     nbOfSpawns: 16
-    seed: 654654
+    seed: 8485
   pieces: []
   specials: []
 --- !u!114 &985255232
