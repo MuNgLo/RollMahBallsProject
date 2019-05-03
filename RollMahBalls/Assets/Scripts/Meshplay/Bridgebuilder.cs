@@ -12,7 +12,8 @@ public class Bridgebuilder : MonoBehaviour
     private MeshRenderer _meshR;
     private MeshCollider _meshC;
     private Transform _start, _end;
-    private Mesh _segment;
+    //private Mesh _segment;
+    public Mesh _profile;
     void Start()
     {
         _meshF = GetComponent<MeshFilter>();
@@ -20,7 +21,7 @@ public class Bridgebuilder : MonoBehaviour
         _meshC = GetComponent<MeshCollider>();
         _start = this.transform.Find("Start");
         _end = this.transform.Find("End");
-        BuildSegmentMesh();
+        //BuildSegmentMesh();
     }
 
     private void Update()
@@ -28,7 +29,7 @@ public class Bridgebuilder : MonoBehaviour
             BuildBridge();
     }
 
-    private void BuildSegmentMesh()
+    /*private void BuildSegmentMesh()
     {
         _segment = new Mesh();
         _segment.name = "segmentMesh";
@@ -46,7 +47,7 @@ public class Bridgebuilder : MonoBehaviour
             }
             , 0, false);
         
-    }
+    }*/
 
     private void BuildBridge()
     {
@@ -70,25 +71,65 @@ public class Bridgebuilder : MonoBehaviour
         CombineInstance[] combines = new CombineInstance[points.Count - 1];
         for (int i = 0; i < points.Count -1; i++)
         {
-            combines[i] = MakeSegment(points[i], points[i + 1]);
+            combines[i] = MakeSegmentFromProfile(points[i], points[i + 1]);
         }
         return combines;
     }
 
-    private CombineInstance MakeSegment(Vector3 startPoint, Vector3 endPoint)
+    private CombineInstance MakeSegmentFromProfile(Vector3 startPoint, Vector3 endPoint)
     {
         CombineInstance result = new CombineInstance();
         result.mesh = new Mesh();
-        result.mesh.vertices = _segment.vertices;
-        result.mesh.triangles = _segment.triangles;
-        result.mesh.vertices = new Vector3[] {
-                startPoint + _start.TransformDirection(Vector3.forward*_width),
-                startPoint + _start.TransformDirection(-Vector3.forward*_width),
-               endPoint + _end.TransformDirection(Vector3.forward*_width),
-                endPoint + _end.TransformDirection(-Vector3.forward*_width),
-        };
+        int proVertCount = _profile.vertices.Length;
+        Vector3[] segVerts = new Vector3[proVertCount * 2];
+        for (int i = 0; i < _profile.vertices.Length * 2; i++)
+        {
+            int index = i;
+            if(index >= _profile.vertices.Length) { index -= _profile.vertices.Length; }
+            if(i < _profile.vertices.Length)
+            {
+                segVerts[i] = startPoint + _profile.vertices[index];
+            }
+            else
+            {
+                segVerts[i] = endPoint + _profile.vertices[index];
+            }
+        }
+        result.mesh.vertices = segVerts; // Maybe throw if vertices nmot dividable by 2
+
+        // Build surfaces
+        List<int> tris = new List<int>();
+        for (int steps = 0; steps < proVertCount-1; steps++)
+        {
+            tris.Add(steps + proVertCount);
+            tris.Add(steps + 1);
+            tris.Add(steps);
+        
+                //tris.Add(steps + 1);
+                //tris.Add(steps +  proVertCount - 1);
+                //tris.Add(steps + 2 + proVertCount - 1);
+
+                tris.Add(steps + 1);
+                tris.Add(steps + 1 + proVertCount - 1);
+                tris.Add(steps + 2 + proVertCount - 1);
+                
+            
+        }
+        // seal Bottom
+        tris.Add( proVertCount - 1);
+        tris.Add( proVertCount + proVertCount - 1);
+        tris.Add( 0);
+
+        tris.Add(proVertCount);
+        tris.Add(0);
+        tris.Add(proVertCount + proVertCount - 1);
+        
+
+        result.mesh.SetTriangles(tris, 0, false);
+
         return result;
     }
+
 
     private List<Vector3> CalculateBridgePoints()
     {
@@ -106,4 +147,18 @@ public class Bridgebuilder : MonoBehaviour
         points.Add(_end.localPosition);
         return points;
     }
+    /*private CombineInstance MakeSegment(Vector3 startPoint, Vector3 endPoint)
+    {
+        CombineInstance result = new CombineInstance();
+        result.mesh = new Mesh();
+        result.mesh.vertices = _segment.vertices;
+        result.mesh.triangles = _segment.triangles;
+        result.mesh.vertices = new Vector3[] {
+                startPoint + _start.TransformDirection(Vector3.forward*_width),
+                startPoint + _start.TransformDirection(-Vector3.forward*_width),
+               endPoint + _end.TransformDirection(Vector3.forward*_width),
+                endPoint + _end.TransformDirection(-Vector3.forward*_width),
+        };
+        return result;
+    }*/
 }

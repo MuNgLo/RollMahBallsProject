@@ -323,3 +323,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _segments: 100
   _width: 0.45
+  _profile: {fileID: 4300000, guid: 8576dd3536f06ed44b6e5ff03d3b25c7, type: 3}
