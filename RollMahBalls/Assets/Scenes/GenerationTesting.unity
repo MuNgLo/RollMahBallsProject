@@ -915,7 +915,7 @@ MonoBehaviour:
     column: -1
   - prefabName: pfStraight
     willGenerate: 1
-    generationWeight: 1500
+    generationWeight: 3000
     validNorth:
       wall: 0
       floor: 0
