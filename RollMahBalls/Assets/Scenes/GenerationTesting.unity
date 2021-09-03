@@ -860,7 +860,7 @@ MonoBehaviour:
   mData:
     width: 60
     height: 60
-    nbOfRooms: 20
+    nbOfRooms: 40
     nbOfSpawns: 16
     seed: 8485
   pieces: []
@@ -1469,7 +1469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6fb594663d33114abb626c161fc7bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connections: []
+  _connections: []
 --- !u!1 &1315908654
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,6 @@ namespace MazeGen
         public bool genFiller = true;
         public MazeData mData;
 
-        private List<ConnectionData> connectionDatas;// = GetComponent<MazeBuilder>().connections;
 
         //private System.Random rng;
         private PRNGMarsenneTwister rng;
@@ -23,10 +22,12 @@ namespace MazeGen
         [SerializeField]
         private List<MazePartDefinition> specials = new List<MazePartDefinition>();
         private RoomDefinitions roomlist;
+
+        public List<ConnectionData> ConnectionData { get => GetComponent<MazeBuilder>()._connections; }// set => connectionDatas = value; }
+
         // Start is called before the first frame update
         void Start()
         {
-            connectionDatas = GetComponent<MazeBuilder>().connections;
             parts = GetComponent<MazeParts>();
             roomlist = transform.Find("Rooms").GetComponent<RoomDefinitions>();
             mData.ClearMap();
@@ -102,7 +103,8 @@ namespace MazeGen
                     {
                         row = ROW, column = COL, areaIndex = areaIndex
                     };
-                    connectionDatas.Add(cData);
+                    //GetComponent<MazeBuilder>().ConnectionAdd(cData);
+                    ConnectionData.Add(cData);
                 }
             }
             // Run connectivity check
@@ -121,13 +123,13 @@ namespace MazeGen
             await Task.Run(() =>
             {
                 int abortIn = 250;
-                while (abortIn > 0 && connectionDatas.Exists(p => p.areaIndex != 1))
+                while (abortIn > 0 && GetComponent<MazeBuilder>()._connections.Exists(p => p.areaIndex != 1))
                 {
-                    foreach (ConnectionData cData in connectionDatas)
+                    foreach (ConnectionData cData in ConnectionData)
                     {
                         if (cData.areaIndex > 1)
                         {
-                            UpdateConnectivityOnConnectionData(connectionDatas.FindIndex(p => p.row == cData.row && p.column == cData.column));
+                            UpdateConnectivityOnConnectionData(ConnectionData.FindIndex(p => p.row == cData.row && p.column == cData.column));
                         }
                     }
                     abortIn--;
@@ -142,8 +144,8 @@ namespace MazeGen
         private void UpdateConnectivityOnConnectionData(int index)
         {
             
-            int ROW = connectionDatas[index].row;
-            int COL = connectionDatas[index].column;
+            int ROW = ConnectionData[index].row;
+            int COL = ConnectionData[index].column;
             //check North
             if (mData.Map.ContainsKey(ROW - 1))
             {
@@ -151,10 +153,10 @@ namespace MazeGen
                 {
                     if (mData.Map[ROW][COL].validNorth.corridor || mData.Map[ROW][COL].validNorth.floor)
                     {
-                        connectionDatas[index].openNorth = 1; // flag north as connected
-                        if (connectionDatas[index].areaIndex != connectionDatas.Find(p => p.row == ROW - 1 && p.column == COL).areaIndex)
+                        ConnectionData[index].openNorth = 1; // flag north as connected
+                        if (ConnectionData[index].areaIndex != ConnectionData.Find(p => p.row == ROW - 1 && p.column == COL).areaIndex)
                         {
-                            MergeAreas(connectionDatas[index].areaIndex, connectionDatas.Find(p => p.row == ROW - 1 && p.column == COL).areaIndex);
+                            MergeAreas(ConnectionData[index].areaIndex, ConnectionData.Find(p => p.row == ROW - 1 && p.column == COL).areaIndex);
                         }
                     }
                 }
@@ -166,10 +168,10 @@ namespace MazeGen
                 {
                     if (mData.Map[ROW][COL].validEast.corridor || mData.Map[ROW][COL].validEast.floor)
                     {
-                        connectionDatas[index].openEast = 1; // flag east as connected
-                        if (connectionDatas[index].areaIndex != connectionDatas.Find(p => p.row == ROW && p.column == COL + 1).areaIndex)
+                        ConnectionData[index].openEast = 1; // flag east as connected
+                        if (ConnectionData[index].areaIndex != ConnectionData.Find(p => p.row == ROW && p.column == COL + 1).areaIndex)
                         {
-                            MergeAreas(connectionDatas[index].areaIndex, connectionDatas.Find(p => p.row == ROW && p.column == COL + 1).areaIndex);
+                            MergeAreas(ConnectionData[index].areaIndex, ConnectionData.Find(p => p.row == ROW && p.column == COL + 1).areaIndex);
                         }
                     }
                 }
@@ -181,10 +183,10 @@ namespace MazeGen
                 {
                     if (mData.Map[ROW][COL].validSouth.corridor || mData.Map[ROW][COL].validSouth.floor)
                     {
-                        connectionDatas[index].openSouth = 1; // flag south as connected
-                        if (connectionDatas[index].areaIndex != connectionDatas.Find(p => p.row == ROW + 1 && p.column == COL).areaIndex)
+                        ConnectionData[index].openSouth = 1; // flag south as connected
+                        if (ConnectionData[index].areaIndex != ConnectionData.Find(p => p.row == ROW + 1 && p.column == COL).areaIndex)
                         {
-                            MergeAreas(connectionDatas[index].areaIndex, connectionDatas.Find(p => p.row == ROW + 1 && p.column == COL).areaIndex);
+                            MergeAreas(ConnectionData[index].areaIndex, ConnectionData.Find(p => p.row == ROW + 1 && p.column == COL).areaIndex);
                         }
                     }
                 }
@@ -196,10 +198,10 @@ namespace MazeGen
                 {
                     if (mData.Map[ROW][COL].validWest.corridor || mData.Map[ROW][COL].validWest.floor)
                     {
-                        connectionDatas[index].openWest = 1; // flag west as connected
-                        if (connectionDatas[index].areaIndex != connectionDatas.Find(p => p.row == ROW && p.column == COL - 1).areaIndex)
+                        ConnectionData[index].openWest = 1; // flag west as connected
+                        if (ConnectionData[index].areaIndex != ConnectionData.Find(p => p.row == ROW && p.column == COL - 1).areaIndex)
                         {
-                            MergeAreas(connectionDatas[index].areaIndex, connectionDatas.Find(p => p.row == ROW && p.column == COL - 1).areaIndex);
+                            MergeAreas(ConnectionData[index].areaIndex, ConnectionData.Find(p => p.row == ROW && p.column == COL - 1).areaIndex);
                         }
                     }
                 }
@@ -226,13 +228,13 @@ namespace MazeGen
 
             if (areaA == newAreaIndex)
             {
-                foreach (ConnectionData cData in connectionDatas.FindAll(p => p.areaIndex == areaB))
+                foreach (ConnectionData cData in ConnectionData.FindAll(p => p.areaIndex == areaB))
                 {
                     cData.areaIndex = areaA;
                 }
             }else if (areaB == newAreaIndex)
             {
-                foreach (ConnectionData cData in connectionDatas.FindAll(p => p.areaIndex == areaA))
+                foreach (ConnectionData cData in ConnectionData.FindAll(p => p.areaIndex == areaA))
                 {
                     cData.areaIndex = areaB;
                 }

@@ -7,10 +7,18 @@ namespace MazeGen
     {
         private MazeParts parts;
         private MazeMaker maker;
-        public List<ConnectionData> connections;
+        [HideInInspector]
+        public List<ConnectionData> _connections;
+
+        public void ConnectionAdd(ConnectionData conn)
+        {
+            _connections.Add(conn);
+        }
+
         // Start is called before the first frame update
         void Start()
         {
+            _connections = new List<ConnectionData>();
             parts = GetComponent<MazeParts>();
             maker = GetComponent<MazeMaker>();
         }
@@ -45,9 +53,9 @@ namespace MazeGen
                 part.transform.rotation = Quaternion.Euler(0.0f, 90.0f * def.rotation, 0.0f);
                 part.name = $"{def.prefabName.Replace("pf", "")} ROW:{def.row} COLUMN:{def.column}";
                 // If area A change material
-                int cDataIndex = connections.FindIndex(p => p.row == def.row && p.column == def.column);
-                connections[cDataIndex].inGameObject = part;
-                part.GetComponent<MazePiece>().AssignArea(connections[cDataIndex]);
+                int cDataIndex = _connections.FindIndex(p => p.row == def.row && p.column == def.column);
+                _connections[cDataIndex].inGameObject = part;
+                part.GetComponent<MazePiece>().AssignArea(_connections[cDataIndex]);
                 
                 part.transform.position = new Vector3(column * 7, 0, row * -7);
             }
